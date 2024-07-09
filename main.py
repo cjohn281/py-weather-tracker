@@ -32,3 +32,4 @@ for date in dates:
 
 if message_body != f"WEATHER ALERTS FOR {location}:":
     notification_manager.send_message(message_body)
+    notification_manager.send_email(message_body)
