@@ -1,7 +1,8 @@
 from twilio.rest import Client
-# from twilio.http.http_client import TwilioHttpClient
+from twilio.http.http_client import TwilioHttpClient
 from dotenv import load_dotenv
 import os
+import smtplib
 
 load_dotenv()
 
@@ -11,12 +12,15 @@ class NotificationManager:
     def __init__(self):
         self._source_number = os.environ.get("TWILIO_VIRTUAL_NUMBER")
         self._dest_number = os.environ.get("TWILIO_VERIFIED_NUMBER")
-        # self._proxy_client = TwilioHttpClient(proxy={"http": os.environ["http_proxy"], "https": os.environ["https_proxy"]})
+        # self._proxy_client = TwilioHttpClient(
+        #     proxy={"http": os.environ["http_proxy"], "https": os.environ["https_proxy"]}
+        # )
         # self.twilio_client = Client(os.environ.get("TWILIO_SID"),
         #                             os.environ.get("TWILIO_AUTH_TOKEN"),
         #                             http_client=self._proxy_client)
         self.twilio_client = Client(os.environ.get("TWILIO_SID"),
                                     os.environ.get("TWILIO_AUTH_TOKEN"))
+        self.smtp = smtplib.SMTP(os.environ.get("SMTP"))
 
     def send_message(self, message_body: str):
         """Sends messages using the Twilio service
@@ -26,4 +30,17 @@ class NotificationManager:
             from_=self._source_number,
             to=self._dest_number,
             body=message_body
+        )
+
+    def send_email(self, message_body: str):
+        """Sends emails using smtplib
+
+        :parameter message_body: The body of the message to send via email"""
+        user = os.environ.get("EMAIL_USER")
+        self.smtp.starttls()
+        self.smtp.login(user=user, password=os.environ.get("EMAIL_PASSWORD"))
+        self.smtp.sendmail(
+            to_addrs=os.environ.get("TO_EMAIL"),
+            from_addr=user,
+            msg=f"Subject: Weather Alert!\n\n{message_body}"
         )
