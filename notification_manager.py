@@ -7,7 +7,9 @@ load_dotenv()
 
 
 class NotificationManager:
-    """A Class designed to interact with the Twilio API and send text messages through the Twilio service"""
+    """This class is responsible for communicating with Twilio and AMTP services
+    and sending messages via SMS and email.
+    """
     def __init__(self):
         self._source_number = os.environ.get("TWILIO_VIRTUAL_NUMBER")
         self._dest_number = os.environ.get("TWILIO_VERIFIED_NUMBER")
@@ -17,9 +19,11 @@ class NotificationManager:
         self.smtp.starttls()
 
     def send_message(self, message_body: str):
-        """Sends messages using the Twilio service
+        """Sends SMS messages via Twilio service
 
-        :parameter message_body: The body of the message to send via text message"""
+        Args:
+            message_body (str): The content of the message to be sent via SMS
+        """
         self.twilio_client.messages.create(
             from_=self._source_number,
             to=self._dest_number,
@@ -27,9 +31,11 @@ class NotificationManager:
         )
 
     def send_email(self, message_body: str):
-        """Sends emails using smtplib
+        """Sends email messages wia smtplib
 
-        :parameter message_body: The body of the message to send via email"""
+        Args:
+            message_body (str): The content of the message to be sent via email
+        """
         user = os.environ.get("EMAIL_USER")
         self.smtp.login(user=user, password=os.environ.get("EMAIL_PASSWORD"))
         self.smtp.sendmail(

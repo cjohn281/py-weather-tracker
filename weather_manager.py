@@ -13,9 +13,16 @@ def valid_date(date: str) -> None | dt.timedelta:
     The input date cannot be earlier than Jan 1 2010 and cannot be later than 300 days past the current date
     and cannot be between 10 and 14 days past the current date due to an api limitation.
 
-    :parameter date: The date to query. String format YYYY-MM-DD
-    Returns timedelta: if the input date is valid the difference between the input date and the current date is returned
-    None: if the input date is not in valid format or not within the correct range of acceptable dates"""
+    Args:
+        date (str): The date to query. String format YYYY-MM-DD
+
+    Raises:
+        InvalidDateError: _description_
+        InvalidDateError: _description_
+
+    Returns:
+        None | dt.timedelta: if the input date is valid the difference between the input date and the current date is returned
+    """
     earliest_date = dt.datetime(2010, 1, 1)
     today = dt.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
     today_plus_10 = today + dt.timedelta(days=10)
@@ -41,11 +48,12 @@ def valid_date(date: str) -> None | dt.timedelta:
 def convert_time(time: str) -> str:
     """Converts a string time in 24-hour format to 12-hour format
 
-    Parameters:
-        time: A time string in 24-hour format
+    Args:
+        time (str): A time string in 24-hour format
 
     Returns:
-        A time string in 12-hour format"""
+        str: A time string in 12-hour format
+    """
     am_pm = "AM"
     split_time = time.strip().split(":")
     hour = int(split_time[0])
@@ -57,7 +65,8 @@ def convert_time(time: str) -> str:
 
 
 class WeatherManager:
-    """Class designed to interact with the interactive weather api at weatherapi.com"""
+    """Class designed to interact with the interactive weather api at weatherapi.com
+    """
     def __init__(self):
         self._key = os.environ.get("WEATHER_API_KEY")
 
@@ -113,5 +122,10 @@ class WeatherManager:
 
 
 class InvalidDateError(ValueError):
+    """Error for invalid date values
+
+    Args:
+        ValueError (_type_): Invalid date values
+    """
     def __init__(self):
         super().__init__()
