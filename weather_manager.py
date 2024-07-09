@@ -18,7 +18,6 @@ def valid_date(date: str) -> None | dt.timedelta:
 
     Raises:
         InvalidDateError: _description_
-        InvalidDateError: _description_
 
     Returns:
         None | dt.timedelta: if the input date is valid the difference between the input date and the current date is returned
@@ -30,9 +29,9 @@ def valid_date(date: str) -> None | dt.timedelta:
     latest_date = today + dt.timedelta(days=299)
     try:
         dt_date = dt.datetime.strptime(date, "%Y-%m-%d")
-        if dt_date < earliest_date or dt_date > latest_date:
-            raise InvalidDateError
-        if today_plus_10 <= dt_date < today_plus_14:
+        if dt_date < earliest_date or dt_date > latest_date or (
+            today_plus_10 <= dt_date < today_plus_14
+        ):
             raise InvalidDateError
     except InvalidDateError:
         print("Date must be no earlier than Jan 1, 2010 and date cannot be between 10 and 14 days later than current "
